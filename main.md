@@ -1,18 +1,24 @@
-# knowledge
+# pavtiger's knowledge
+It is highly welcome to point out mistakes and improvements in issues.
+
+## LINUX
 Opening and editing markdown files:
 ```shell
 apostrophe main.md
 ```
 
-## LINUX
-Run darktable when it does not start  
-```shell
-darktable --disable-opencl
-```
-
 iptables list all
 ```shell
 sudo iptables -A
+```
+
+Get assigned ip on a specific interface (here: **wlan0**)
+```shell
+ip -f inet addr show wlan0 | awk '/inet / {print $2}'
+```
+And get all ips on machine
+```shell
+/sbin/ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'
 ```
 
 Find location
@@ -42,10 +48,16 @@ Unmount a busy device
 umount -l /PATH/OF/BUSY-DEVICE
 ```
 
+Run darktable when it does not start
+```shell
+darktable --disable-opencl
+```
+
 Port numbers in computer networking represent communication endpoints. Ports are unsigned 16-bit integers (0-65535) that identify a specific process, or network service. IANA is responsible for internet protocol resources, including the registration of commonly used port numbers for well-known internet services.
 Well Known Ports: 0 through 1023.
 Registered Ports: 1024 through 49151.
 Dynamic/Private : 49152 through 65535.
+
 
 ## VIM
 * `:w !sudo tee %` - save file with sudo permissions
@@ -77,6 +89,22 @@ set tabstop=4
 set number
 ```
 
+
+## GIT
+Apply patch
+```shell
+patch -p1 < path/file.patch
+```
+Git pull (fetch) another branch
+```shell
+git fetch origin branch:branch
+```
+Delete branch
+```shell
+git branch --delete <branchname>
+```
+
+
 ## SSH
 sshfs mount
 ```shell
@@ -89,6 +117,7 @@ apt sources file (remotes)
 ```shell
 /etc/apt/sources.list
 ```
+
 
 ## BYOBU / TMUX
 byobu turn off tabs auto renaming  
@@ -105,6 +134,7 @@ Install pip on any version of python
 curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 ```
 
+
 ## DWM
 dwm get active monitor ([link](https://www.reddit.com/r/suckless/comments/k7806r/querying_active_monitor_in_dwm/), [link](https://dwm.suckless.org/patches/ipc/))  
 Take 4k screenshots with 1080 monitor (rescale xrandr output)
@@ -112,9 +142,25 @@ Take 4k screenshots with 1080 monitor (rescale xrandr output)
 xrandr --output eDP --scale 2x2 --panning 3840x2160
 ```
 
+
 ## UBUNTU
 ubuntu do not go to sleep on lid close  
 file `vim /etc/systemd/logind.conf`, uncomment and change `HandleLidSwitch=ignore`
+
+
+## RASPBERRY
+Network configuration from a file. Connect micro SD card to your computer and mount `boot` partition. Then create file `wpa_supplicant.conf` using this template (this file will then be in `/etc/wpa_supplicant/wpa_supplicant.conf`)
+```text
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=RU
+
+network={
+        ssid="name"
+        psk="password"
+}
+```
+On next boot up raspberry will automatically connect to the network. You can also turn on **System Options** >> **Network at Boot** in `sudo raspi-config`. That way your OS starts only when network has been connected (fixes possible issues in scripts)
 
 ## HARDWARE, MOTHERBOARDS, BIOS, DATA
 asus change integrated gpu setting (igpu)  
@@ -126,11 +172,13 @@ USB standards:
 `testdisk` - Recover disk (NO GPT support)  
 `photorec` - better alternative with wider support
 
+
 ## DOCKER
 [Docker migrate image](https://stackoverflow.com/questions/23935141/how-to-copy-docker-images-from-one-host-to-another-without-using-a-repository)
 
 Docker create GUI display  
 https://leimao.github.io/blog/Docker-Container-GUI-Display/
+
 
 ## SERVERS, STORAGE
 [create GPT RAID6](https://unix.stackexchange.com/questions/318098/mdadm-raid-implementation-with-gpt-partitioning)  
@@ -145,21 +193,13 @@ linux run speedtest in a docker container
 docker run --rm -it gists/speedtest-cli
 ```
 
-## GIT
-Apply patch
-```shell
-patch -p1 < path/file.patch
-```
-Git pull (fetch) another branch
-```shell
-git fetch origin branch:branch
-```
 
 ## WINDOWS
 Running an `.exe` file using an absolute path with spaces
 ```shell
 & "C:\Program Files\Blender Foundation\Blender 3.4\blender.exe" -b project.blend -E BLENDER_EEVEE --python use_gpu.py -o C:\Users\pavti\Documents\process-client\render\### -s 1 -a
 ```
+
 
 ## VIRTUALISATION
 Windows virtual machine setup
@@ -249,5 +289,12 @@ sudo systemctl enable libvirtd --now
 sudo adduser pavtiger libvirt
 ```
 
+
 ## OTHER
 FTL save path `~/.local/share/FasterThanLight`
+
+
+## RULES
+1) Between points there should be two empty lines for readability
+2) Between two different instructions there should be one empty line
+3) Each point starts with ## (second level of header)
