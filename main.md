@@ -37,12 +37,18 @@ Monitor all files accessed by a command
 strace -f -o log -e openat,open,creat ./command
 ```
 
+Unmount a busy device
+```shell
+umount -l /PATH/OF/BUSY-DEVICE
+```
+
 Port numbers in computer networking represent communication endpoints. Ports are unsigned 16-bit integers (0-65535) that identify a specific process, or network service. IANA is responsible for internet protocol resources, including the registration of commonly used port numbers for well-known internet services.
 Well Known Ports: 0 through 1023.
 Registered Ports: 1024 through 49151.
 Dynamic/Private : 49152 through 65535.
 
 ## VIM
+* `:w !sudo tee %` - save file with sudo permissions
 * `:%s/foo/bar/gc` - search
 * `[line] + G` - jump to line
 * `ctrl + o`, `ctrl + l` - unjump (back) and ununjump
@@ -53,6 +59,23 @@ Dynamic/Private : 49152 through 65535.
 * `G` - jump to file end
 * `: !<shell command>`
 * `/word` - search in file
+
+vim remove redundant spaces from line ends
+```
+:%s/\s\+$//
+```
+
+vim update tabs in document
+```
+:retab
+```
+
+My minimal .vimrc
+```shell
+set softtabstop=0 expandtab
+set tabstop=4
+set number
+```
 
 ## SSH
 sshfs mount
@@ -126,6 +149,10 @@ docker run --rm -it gists/speedtest-cli
 Apply patch
 ```shell
 patch -p1 < path/file.patch
+```
+Git pull (fetch) another branch
+```shell
+git fetch origin branch:branch
 ```
 
 ## WINDOWS
