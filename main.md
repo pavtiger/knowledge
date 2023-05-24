@@ -48,9 +48,23 @@ Unmount a busy device
 umount -l /PATH/OF/BUSY-DEVICE
 ```
 
+Create image of a disk
+```shell
+# zero out all empty bytes on target storage device
+dd if=/dev/zero of=/run/media/pavtiger/rootfs/asdf.txt
+# then delete file
+# create image and compress it
+sudo dd if=/dev/sda bs=1M status=progress | gzip -c > image.gz
+```
+
 Run darktable when it does not start
 ```shell
 darktable --disable-opencl
+```
+
+Upgrade Yark
+```shell
+python -m pip install yark --upgrade
 ```
 
 Port numbers in computer networking represent communication endpoints. Ports are unsigned 16-bit integers (0-65535) that identify a specific process, or network service. IANA is responsible for internet protocol resources, including the registration of commonly used port numbers for well-known internet services.
@@ -71,16 +85,9 @@ Dynamic/Private : 49152 through 65535.
 * `G` - jump to file end
 * `: !<shell command>`
 * `/word` - search in file
-
-vim remove redundant spaces from line ends
-```
-:%s/\s\+$//
-```
-
-vim update tabs in document
-```
-:retab
-```
+* `:set mouse-=a` - fix cursor select
+* `:%s/\s\+$//` - remove redundant spaces from line ends
+* `:retab` - update tabs in document
 
 My minimal .vimrc
 ```shell
@@ -120,11 +127,17 @@ apt sources file (remotes)
 
 
 ## BYOBU / TMUX
-byobu turn off tabs auto renaming  
+Byobu turn off tabs auto renaming
 `set-option -g allow-rename off` in file `/usr/share/byobu/profiles/tmux`
 
 ```shell
 byobu list-session
+```
+
+Fix byobu not resizing window propperly
+![byobu_resizing](images/byobu_resizing.jpg)
+```shell
+Alt + F6
 ```
 
 
@@ -136,7 +149,7 @@ curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 
 
 ## DWM
-dwm get active monitor ([link](https://www.reddit.com/r/suckless/comments/k7806r/querying_active_monitor_in_dwm/), [link](https://dwm.suckless.org/patches/ipc/))  
+dwm get active monitor ([link](https://www.reddit.com/r/suckless/comments/k7806r/querying_active_monitor_in_dwm/), [link](https://dwm.suckless.org/patches/ipc/))
 Take 4k screenshots with 1080 monitor (rescale xrandr output)
 ```shell
 xrandr --output eDP --scale 2x2 --panning 3840x2160
@@ -144,7 +157,7 @@ xrandr --output eDP --scale 2x2 --panning 3840x2160
 
 
 ## UBUNTU
-ubuntu do not go to sleep on lid close  
+ubuntu do not go to sleep on lid close
 file `vim /etc/systemd/logind.conf`, uncomment and change `HandleLidSwitch=ignore`
 
 
@@ -163,25 +176,27 @@ network={
 On next boot up raspberry will automatically connect to the network. You can also turn on **System Options** >> **Network at Boot** in `sudo raspi-config`. That way your OS starts only when network has been connected (fixes possible issues in scripts)
 
 ## HARDWARE, MOTHERBOARDS, BIOS, DATA
-asus change integrated gpu setting (igpu)  
-`BIOS -> advanced -> System agent -> graphics configuration -> Primary display`  
+asus change integrated gpu setting (igpu)
+`BIOS -> advanced -> System agent -> graphics configuration -> Primary display`
 
 USB standards:
 ![usb_standards](images/usb_standards.jpg)
 
-`testdisk` - Recover disk (NO GPT support)  
+`testdisk` - Recover disk (NO GPT support)
 `photorec` - better alternative with wider support
 
+XLR splitter diagram
+![xlr_splitter](images/xlr_splitter.jpg)
 
 ## DOCKER
 [Docker migrate image](https://stackoverflow.com/questions/23935141/how-to-copy-docker-images-from-one-host-to-another-without-using-a-repository)
 
-Docker create GUI display  
+Docker create GUI display
 https://leimao.github.io/blog/Docker-Container-GUI-Display/
 
 
 ## SERVERS, STORAGE
-[create GPT RAID6](https://unix.stackexchange.com/questions/318098/mdadm-raid-implementation-with-gpt-partitioning)  
+[create GPT RAID6](https://unix.stackexchange.com/questions/318098/mdadm-raid-implementation-with-gpt-partitioning)
 
 linux test write speed
 ```shell
@@ -193,6 +208,13 @@ linux run speedtest in a docker container
 docker run --rm -it gists/speedtest-cli
 ```
 
+Create X virtual framebuffer (Xvfb) for GUI applications on headless server (but cannot use GPU propperly)
+```shell
+Xvfb :1 &  # Create X virtual framebuffer
+PID=$!
+DISPLAY=:1 python3 client.py
+kill $PID
+```
 
 ## WINDOWS
 Running an `.exe` file using an absolute path with spaces
@@ -239,7 +261,7 @@ Remove gdm
 sudo dpkg-reconfigure gdm3
 ```
 
-The normal Mint display manager is MDM, which with a bit of luck you can restore as the default with... 
+The normal Mint display manager is MDM, which with a bit of luck you can restore as the default with...
 ```shell
 sudo apt-get install --reinstall mdm
 ```
@@ -292,6 +314,8 @@ sudo adduser pavtiger libvirt
 
 ## OTHER
 FTL save path `~/.local/share/FasterThanLight`
+
+[Mixxx](https://mixxx.org/) - DJ Software for Linux
 
 
 ## RULES
