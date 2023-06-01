@@ -43,9 +43,19 @@ Monitor all files accessed by a command
 strace -f -o log -e openat,open,creat ./command
 ```
 
+Monitor file changes (cat and update)
+```shell
+watch cat /proc/mdstat
+```
+
 Unmount a busy device
 ```shell
 umount -l /PATH/OF/BUSY-DEVICE
+```
+
+Mount all records from `/etc/fstab`
+```shell
+mount -a
 ```
 
 Create image of a disk
@@ -67,6 +77,10 @@ Upgrade Yark
 python -m pip install yark --upgrade
 ```
 
+Managing disk with nice GUI - `gparted`
+
+[Fix no ethernet nmtui or in machine itself](https://askubuntu.com/questions/904545/networkmanager-doesnt-show-ethernet-connection)
+
 Port numbers in computer networking represent communication endpoints. Ports are unsigned 16-bit integers (0-65535) that identify a specific process, or network service. IANA is responsible for internet protocol resources, including the registration of commonly used port numbers for well-known internet services.
 Well Known Ports: 0 through 1023.
 Registered Ports: 1024 through 49151.
@@ -75,7 +89,7 @@ Dynamic/Private : 49152 through 65535.
 
 ## VIM
 * `:w !sudo tee %` - save file with sudo permissions
-* `:%s/foo/bar/gc` - search
+* `:%s/foo/bar/gc` - search and replace
 * `[line] + G` - jump to line
 * `ctrl + o`, `ctrl + l` - unjump (back) and ununjump
 * `W, shift w, b, e` - move in words
@@ -93,22 +107,44 @@ My minimal .vimrc
 ```shell
 set softtabstop=0 expandtab
 set tabstop=4
+set shiftwidth=4
 set number
 ```
 
 
 ## GIT
+Fix git permissions (empty git diff for some files)
+```shell
+git config core.fileMode false
+```
+
 Apply patch
 ```shell
 patch -p1 < path/file.patch
 ```
+
 Git pull (fetch) another branch
 ```shell
 git fetch origin branch:branch
 ```
+
 Delete branch
 ```shell
 git branch --delete <branchname>
+```
+
+Pull git submodules
+```shell
+git submodule update --init --recursive
+```
+or just when cloning
+```shell
+git clone repo.git --recursive
+```
+
+Git reset a single file to it's remote state
+```shell
+git checkout HEAD -- my-file.txt
 ```
 
 
@@ -157,8 +193,13 @@ xrandr --output eDP --scale 2x2 --panning 3840x2160
 
 
 ## UBUNTU
-ubuntu do not go to sleep on lid close
+Ubuntu do not go to sleep on lid close
 file `vim /etc/systemd/logind.conf`, uncomment and change `HandleLidSwitch=ignore`
+
+Ubuntu get current release version (for example 22.04)
+```shell
+lsb_release -a
+```
 
 
 ## RASPBERRY
@@ -175,8 +216,12 @@ network={
 ```
 On next boot up raspberry will automatically connect to the network. You can also turn on **System Options** >> **Network at Boot** in `sudo raspi-config`. That way your OS starts only when network has been connected (fixes possible issues in scripts)
 
+[Raspberry temperature and humidity sensor script](https://www.freva.com/dht11-temperature-and-humidity-sensor-on-raspberry-pi/)
+
 ## HARDWARE, MOTHERBOARDS, BIOS, DATA
-asus change integrated gpu setting (igpu)
+[Install drivers nvidia on ubuntu](https://askubuntu.com/questions/1112814/install-driver-for-gtx-1070)
+
+asus change integrated gpu setting (igpu)  
 `BIOS -> advanced -> System agent -> graphics configuration -> Primary display`
 
 USB standards:
@@ -185,14 +230,31 @@ USB standards:
 `testdisk` - Recover disk (NO GPT support)
 `photorec` - better alternative with wider support
 
-XLR splitter diagram
+XLR splitter diagram  
 ![xlr_splitter](images/xlr_splitter.jpg)
 
+
 ## DOCKER
+Docker create user and run without sud
+```shell
+sudo groupadd docker
+sudo gpasswd -a $USER docker
+newgrp docker
+```
+
 [Docker migrate image](https://stackoverflow.com/questions/23935141/how-to-copy-docker-images-from-one-host-to-another-without-using-a-repository)
 
-Docker create GUI display
+Docker create GUI display  
 https://leimao.github.io/blog/Docker-Container-GUI-Display/
+
+Dockerfile example
+```shell
+FROM ubuntu:22.04
+RUN apt update && apt install -y jq vim git curl && rm -rf /var/lib/apt/
+RUN cd /usr/local && git clone https://github.com/kolayne/clone_all_repos.git && cd clone_all_repos
+COPY backup_github.sh /usr/local/clone_all_repos/
+ENTRYPOINT /usr/local/clone_all_repos/backup_github.sh
+```
 
 
 ## SERVERS, STORAGE
@@ -215,6 +277,10 @@ PID=$!
 DISPLAY=:1 python3 client.py
 kill $PID
 ```
+
+[Server naming conventions](https://namingschemes.com/)  
+[My selected naming convention](https://namingschemes.com/Star_Wars)
+
 
 ## WINDOWS
 Running an `.exe` file using an absolute path with spaces
@@ -312,10 +378,24 @@ sudo adduser pavtiger libvirt
 ```
 
 
+## LABEL-STUDIO
+Fix label-studio attempt to write a readonly database  
+https://github.com/heartexlabs/label-studio/issues/3505
+```shell
+sudo chown -R 1001:root mydata
+docker run -it -p 1331:8080 --user root --name label-studio --env-file ./env -v `pwd`/mydata:/label-studio/data heartexlabs/label-studio:latest
+```
+
+
 ## OTHER
 FTL save path `~/.local/share/FasterThanLight`
 
 [Mixxx](https://mixxx.org/) - DJ Software for Linux
+
+Best climbing shoes brands
+`Scarpa` - Italian brand
+`La sportina` - Italian brand, has some very high end climbing shoes
+`5.10` - American brand, wider shoes
 
 
 ## RULES
