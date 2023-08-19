@@ -1,7 +1,29 @@
 # pavtiger's knowledge
 It is highly welcome to point out mistakes and improvements in issues.
 
-## LINUX
+## Table of Contents
+1. [LINUX](#linux)
+2. [VIM](#vim)
+3. [GIT](#git)
+4. [SSH](#ssh)
+5. [APT](#apt)
+6. [BYOBU / TMUX](#byobu)
+7. [PYTHON](#python)
+8. [ML/DL](#ml-dl)
+9. [DWM](#dwm)
+10. [UBUNTU](#ubuntu)
+11. [RASPBERRY](#raspberry)
+12. [HARDWARE, MOTHERBOARDS, BIOS, DATA](#harware)
+13. [DOCKER](#docker)
+14. [SERVERS, STORAGE](#servers)
+15. [WINDOWS](#windows)
+16. [VIRTUALISATION](#virt)
+17. [LABEL-STUDIO](#label-studio)
+18. [OTHER](#other)
+19. [RULES](#rules)
+
+
+## LINUX <a name="linux"></a>
 Opening and editing markdown files:
 ```shell
 apostrophe main.md
@@ -77,6 +99,27 @@ Upgrade Yark
 python -m pip install yark --upgrade
 ```
 
+Motioneye
+```shell
+# Start in a docker container
+docker pull ccrisan/motioneye:master-armhf
+docker run --name="motioneye" \
+    -p 8765:8765 \
+    --hostname="motioneye" \
+    -v /etc/localtime:/etc/localtime:ro \
+    -v /etc/motioneye:/etc/motioneye \
+    -v /var/lib/motioneye:/var/lib/motioneye \
+    --restart="always" \
+    --detach=true \
+    ccrisan/motioneye:master-armhf
+```
+
+Fix blueman not recognising Logitech MX Master 3 ([discussion](https://github.com/blueman-project/blueman/issues/817)))
+```shell
+sudo pacman -R blueman bluez bluez-utils pulseaudio-bluetooth bluez-qt
+systemctl restart bluetooth
+```
+
 Managing disk with nice GUI - `gparted`
 
 [Fix no ethernet nmtui or in machine itself](https://askubuntu.com/questions/904545/networkmanager-doesnt-show-ethernet-connection)
@@ -87,7 +130,7 @@ Registered Ports: 1024 through 49151.
 Dynamic/Private : 49152 through 65535.
 
 
-## VIM
+## VIM <a name="vim"></a>
 * `:w !sudo tee %` - save file with sudo permissions
 * `:%s/foo/bar/gc` - search and replace
 * `[line] + G` - jump to line
@@ -101,6 +144,7 @@ Dynamic/Private : 49152 through 65535.
 * `/word` - search in file
 * `:set mouse-=a` - fix cursor select
 * `:%s/\s\+$//` - remove redundant spaces from line ends
+* `:s/\<bar\>/baz` - replace full words (`\<bar\>`). [stack overflow](https://stackoverflow.com/questions/15288155/how-to-do-whole-word-search-similar-to-grep-w-in-vim)
 * `:retab` - update tabs in document
 
 My minimal .vimrc
@@ -112,8 +156,8 @@ set number
 ```
 
 
-## GIT
-Fix git permissions (empty git diff for some files)
+## GIT <a name="git"></a>
+Fit fix permissions (empty git diff for some files)
 ```shell
 git config core.fileMode false
 ```
@@ -148,21 +192,21 @@ git checkout HEAD -- my-file.txt
 ```
 
 
-## SSH
+## SSH <a name="ssh"></a>
 sshfs mount
 ```shell
 sshfs -o follow_symlinks andrey:/home/andrey/railings-automatic-collection ~/Docs/andrey
 ```
 
 
-## APT
+## APT <a name="apt"></a>
 apt sources file (remotes)
 ```shell
 /etc/apt/sources.list
 ```
 
 
-## BYOBU / TMUX
+## BYOBU / TMUX <a name="byobu"></a>
 Byobu turn off tabs auto renaming
 `set-option -g allow-rename off` in file `/usr/share/byobu/profiles/tmux`
 
@@ -176,15 +220,30 @@ Fix byobu not resizing window propperly
 Alt + F6
 ```
 
+Byobu kill window
+```shell
+Ctrl + F6
+```
 
-## PYTHON
+Re-color status bar
+```shell
+Control + Shift + F5
+```
+
+
+## PYTHON <a name="python"></a>
 Install pip on any version of python
 ```shell
 curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 ```
 
 
-## DWM
+## ML/DL <a name="ml-dl"></a>
+Triangle of ML jobs  
+![ML-triangle](images/ML-triangle.png)
+
+
+## DWM <a name="dwm"></a>
 dwm get active monitor ([link](https://www.reddit.com/r/suckless/comments/k7806r/querying_active_monitor_in_dwm/), [link](https://dwm.suckless.org/patches/ipc/))
 Take 4k screenshots with 1080 monitor (rescale xrandr output)
 ```shell
@@ -192,7 +251,7 @@ xrandr --output eDP --scale 2x2 --panning 3840x2160
 ```
 
 
-## UBUNTU
+## UBUNTU <a name="ubuntu"></a>
 Ubuntu do not go to sleep on lid close
 file `vim /etc/systemd/logind.conf`, uncomment and change `HandleLidSwitch=ignore`
 
@@ -202,7 +261,7 @@ lsb_release -a
 ```
 
 
-## RASPBERRY
+## RASPBERRY <a name="raspberry"></a>
 Network configuration from a file. Connect micro SD card to your computer and mount `boot` partition. Then create file `wpa_supplicant.conf` using this template (this file will then be in `/etc/wpa_supplicant/wpa_supplicant.conf`)
 ```text
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
@@ -218,7 +277,7 @@ On next boot up raspberry will automatically connect to the network. You can als
 
 [Raspberry temperature and humidity sensor script](https://www.freva.com/dht11-temperature-and-humidity-sensor-on-raspberry-pi/)
 
-## HARDWARE, MOTHERBOARDS, BIOS, DATA
+## HARDWARE, MOTHERBOARDS, BIOS, DATA <a name="hardware"></a>
 [Install drivers nvidia on ubuntu](https://askubuntu.com/questions/1112814/install-driver-for-gtx-1070)
 
 asus change integrated gpu setting (igpu)  
@@ -234,8 +293,8 @@ XLR splitter diagram
 ![xlr_splitter](images/xlr_splitter.jpg)
 
 
-## DOCKER
-Docker create user and run without sud
+## DOCKER <a name="docker"></a>
+Docker create user and run without sudo
 ```shell
 sudo groupadd docker
 sudo gpasswd -a $USER docker
@@ -256,8 +315,21 @@ COPY backup_github.sh /usr/local/clone_all_repos/
 ENTRYPOINT /usr/local/clone_all_repos/backup_github.sh
 ```
 
+Docker workflow example
+```shell
+docker build -t medsenger .
+docker run -dti --name medsenger medsenger
+docker exec -it medsenger bash
+docker stop medsenger
+docker rm medsenger
+```
 
-## SERVERS, STORAGE
+Docker remove auto-start on container
+```shell
+docker update --restart=no container-name
+```
+
+## SERVERS, STORAGE <a name="servers"></a>
 [create GPT RAID6](https://unix.stackexchange.com/questions/318098/mdadm-raid-implementation-with-gpt-partitioning)
 
 linux test write speed
@@ -282,14 +354,14 @@ kill $PID
 [My selected naming convention](https://namingschemes.com/Star_Wars)
 
 
-## WINDOWS
+## WINDOWS <a name="windows"></a>
 Running an `.exe` file using an absolute path with spaces
 ```shell
 & "C:\Program Files\Blender Foundation\Blender 3.4\blender.exe" -b project.blend -E BLENDER_EEVEE --python use_gpu.py -o C:\Users\pavti\Documents\process-client\render\### -s 1 -a
 ```
 
 
-## VIRTUALISATION
+## VIRTUALISATION <a name="virt"></a>
 Windows virtual machine setup
 
 BIOS
@@ -378,7 +450,7 @@ sudo adduser pavtiger libvirt
 ```
 
 
-## LABEL-STUDIO
+## LABEL-STUDIO <a name="label-studio"></a>
 Fix label-studio attempt to write a readonly database  
 https://github.com/heartexlabs/label-studio/issues/3505
 ```shell
@@ -387,7 +459,7 @@ docker run -it -p 1331:8080 --user root --name label-studio --env-file ./env -v 
 ```
 
 
-## OTHER
+## OTHER <a name="other"></a>
 FTL save path `~/.local/share/FasterThanLight`
 
 [Mixxx](https://mixxx.org/) - DJ Software for Linux
@@ -397,8 +469,10 @@ Best climbing shoes brands
 `La sportina` - Italian brand, has some very high end climbing shoes
 `5.10` - American brand, wider shoes
 
+Edit video losslesly - [LosslessCut](https://github.com/mifi/lossless-cut)
 
-## RULES
+
+## RULES <a name="rules"></a>
 1) Between points there should be two empty lines for readability
 2) Between two different instructions there should be one empty line
 3) Each point starts with ## (second level of header)
